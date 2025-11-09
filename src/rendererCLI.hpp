@@ -1,9 +1,9 @@
 #ifndef RENDERER_H
 #define RENDERER_H
 
-#include "board.h"
-#include "player.h"
-#include "tile_queue.h"
+#include "board.hpp"
+#include "player.hpp"
+#include "tileQueue.hpp"
 
 class RendererCLI {
 public:

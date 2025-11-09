@@ -1,25 +1,32 @@
 #ifndef CELL_HPP
 #define CELL_HPP
 
-#include "bonus.hpp"
+#include "bonusSquare.hpp"
+
+enum class Terrain {
+    Empty,
+    Grass,
+    Stone,
+    Bonus
+};
 
 class Cell {
 private:
-    bool occupied;
+    Terrain terrain;
     int playerId;       // -1 si vide
     BonusType bonus;    // type de bonus éventuel
 
 public:
-    // Constructeur
     Cell();
 
-    // Méthodes
     bool isEmpty() const;
-    void setOccupied(int playerId);
-    void setBonus(BonusType bonus);
+    bool isGrass() const;
+    void setGrass(int playerId);
+    void setStone();
+    void setBonus(BonusType type);
 
-    // Getters
     int getPlayerId() const;
+    Terrain getTerrain() const;
     BonusType getBonus() const;
 };
 

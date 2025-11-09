@@ -4,7 +4,7 @@
 #include <vector>
 #include "cell.hpp"
 #include "tile.hpp"
-#include "bonus.hpp"
+#include "bonusSquare.hpp"
 #include "player.hpp"
 
 class Board {
@@ -13,20 +13,16 @@ private:
     int size;
 
 public:
-    // Constructeur
     Board(int size);
 
-    // Placement de tuile
     bool placeTile(Tile& tile, Player& player, int row, int col);
-
-    // Gestion des bonus
     void addBonus(const BonusSquare& bonus);
-
-    // Affichage
     void render() const;
 
-    // Getters
     int getSize() const;
+
+    const Cell& at(int row, int col) const;
+    Cell& at(int row, int col);
 };
 
 #endif

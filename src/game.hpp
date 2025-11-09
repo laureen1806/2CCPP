@@ -1,15 +1,15 @@
-#ifndef GAME_H
-#define GAME_H
+#ifndef GAME_HPP
+#define GAME_HPP
 
 #include <vector>
-#include "player.h"
-#include "board.h"
-#include "tile_queue.h"
+#include "player.hpp"
+#include "board.hpp"       // <-- Assure que Board est défini
+#include "tileQueue.hpp"
 
 class Game {
 private:
     std::vector<Player> players;
-    Board board;
+    Board* board;           // OK car Board est défini
     TileQueue queue;
     int currentRound;
 

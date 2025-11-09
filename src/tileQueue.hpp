@@ -2,7 +2,7 @@
 #define TILE_QUEUE_H
 
 #include <queue>
-#include "tile.h"
+#include "tile.hpp"
 
 class TileQueue {
 private:

@@ -1,10 +1,12 @@
-#ifndef BONUS_H
-#define BONUS_H
+#ifndef BONUS_SQUARE_HPP
+#define BONUS_SQUARE_HPP
 
-#include "player.h"
-#include "game.h"
-
+// Définition de l'énumération BonusType
 enum class BonusType { EXCHANGE, STONE, ROBBERY };
+
+// Forward declarations pour éviter les dépendances circulaires
+class Player;
+class Game;
 
 class BonusSquare {
 private:
