@@ -13,8 +13,9 @@ private:
     std::string name;
     std::string color;
     std::vector<Tile> territory;
+    int id;
     int coupons;
-    int id;   // ← AJOUTÉ
+
 
 public:
     // Constructeur

@@ -40,7 +40,14 @@ public:
         return tiles.size();
     }
 
-    const std::vector<Tile>& getTiles() const;
+    // Vider la file
+    void clear() {
+        tiles.clear();
+    }
+
+    const std::vector<Tile>& getTiles() const {
+        return tiles;
+    }
 };
 
 #endif

@@ -10,7 +10,7 @@ Tile::Tile(const std::vector<std::vector<int>>& s)
       width(s.empty() ? 0 : s[0].size()),
       height(s.size()) {}
 
-// Rotation 90° (transpose + reverse)
+      // Rotation 90° (transpose + reverse)
 void Tile::rotate() {
     if (shape.empty()) return;
     std::vector<std::vector<int>> rotated(width, std::vector<int>(height));

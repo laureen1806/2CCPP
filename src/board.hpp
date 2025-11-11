@@ -23,6 +23,23 @@ public:
 
     const Cell& at(int row, int col) const;
     Cell& at(int row, int col);
+
+    const std::vector<std::vector<Cell>>& getGrid() const {
+        return grid;
+    }
+
+    int getHeight() const {
+        return grid.size();
+    }
+
+    int getWidth() const {
+        return grid.empty() ? 0 : grid[0].size();
+    }
+
+    const Cell& getCell(int row, int col) const {
+        return grid[row][col];
+    }
+
 };
 
 #endif

@@ -2,7 +2,7 @@
 #define BONUS_SQUARE_HPP
 
 // Définition de l'énumération BonusType
-enum class BonusType { EXCHANGE, STONE, ROBBERY };
+enum class BonusType { NONE, EXCHANGE, STONE, ROBBERY };
 
 // Forward declarations pour éviter les dépendances circulaires
 class Player;

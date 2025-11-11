@@ -27,7 +27,10 @@ public:
     // Getters
     int getWidth() const { return width; }
     int getHeight() const { return height; }
-    const std::vector<std::vector<int>>& getShape() const { return shape; }
+    std::vector<std::vector<int>> getShape() const {
+        return shape;
+    }
+
 
     // Affichage console
     void print() const;
