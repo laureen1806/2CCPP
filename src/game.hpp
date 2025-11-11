@@ -15,10 +15,14 @@ private:
 
 public:
     Game(int nbPlayers);
+    void initializeTiles(int nbPlayers);
     void initGame();
     void playRound();
     void endGame();
     Player getWinner();
+    void placeStone();
+    void robTile(Player& thief);
+
 };
 
 #endif

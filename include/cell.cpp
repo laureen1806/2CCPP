@@ -10,6 +10,10 @@ bool Cell::isGrass() const {
     return terrain == Terrain::Grass;
 }
 
+bool Cell::isStone() const {
+    return terrain == Terrain::Stone;
+}
+
 void Cell::setGrass(int playerId) {
     terrain = Terrain::Grass;
     this->playerId = playerId;

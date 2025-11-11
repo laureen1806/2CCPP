@@ -11,12 +11,27 @@ std::string Player::getColor() const { return color; }
 int Player::getCoupons() const { return coupons; }
 int Player::getId() const { return id; }
 
+void Player::addCoupon() {
+    coupons++;
+}
+
 void Player::useCoupon() {
     if (coupons > 0) coupons--;
 }
 
 void Player::placeTile(Tile& tile) {
     territory.push_back(tile);
+}
+
+// Supprime la dernière tuile placée et la retourne
+Tile Player::removeLastTile() {
+    Tile last = territory.back();
+    territory.pop_back();
+    return last;
+}
+
+const std::vector<Tile>& Player::getTerritory() const {
+    return territory;
 }
 
 // Calcul du plus grand carré

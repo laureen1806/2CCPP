@@ -25,10 +25,39 @@ void Tile::flip() {
     }
 }
 
-// Vérifie si la tuile peut être placée (logique à compléter)
-bool Tile::canPlace(const Board& board, int row, int col) const {
-    // TODO: vérifier si toutes les cases de la tuile rentrent dans le plateau
-    // et ne chevauchent pas d'autres territoires
+
+bool Tile::canPlace(const Board& board, int row, int col, int playerId) const {
+    int n = board.getSize();
+
+    for (int i = 0; i < height; ++i) {
+        for (int j = 0; j < width; ++j) {
+            if (shape[i][j] == 0) continue; // case vide de la tuile
+
+            int r = row + i;
+            int c = col + j;
+
+            // Sort du plateau
+            if (r < 0 || c < 0 || r >= n || c >= n)
+                return false;
+
+            const Cell& cell = board.at(r, c);
+
+            // Déjà occupé par un autre joueur ou pierre
+            if (!cell.isEmpty() || cell.isStone())
+                return false;
+
+            // Interdiction de toucher un autre territoire (voisin d'un autre joueur)
+            for (auto [dr, dc] : std::vector<std::pair<int,int>>{{1,0},{-1,0},{0,1},{0,-1}}) {
+                int nr = r + dr, nc = c + dc;
+                if (nr >= 0 && nc >= 0 && nr < n && nc < n) {
+                    const Cell& neighbor = board.at(nr, nc);
+                    if (neighbor.isGrass() && neighbor.getPlayerId() != playerId)
+                        return false;
+                }
+            }
+        }
+    }
+
     return true;
 }
 
