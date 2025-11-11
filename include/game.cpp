@@ -1,8 +1,8 @@
-#include "game.hpp"
-#include "board.hpp"
-#include "tileFactory.hpp"
-#include "rendererCLI.hpp"
-#include "inputManager.hpp"
+#include "../src/game.hpp"
+#include "../src/board.hpp"
+#include "../src/tileFactory.hpp"
+#include "../src/rendererCLI.hpp"
+#include "../src/inputManager.hpp"
 #include <algorithm>
 #include <random>
 #include <cmath>

@@ -7,7 +7,7 @@ CXXFLAGS = -std=c++17 -Wall -Wextra -I./src
 
 # Fichiers sources
 SRC = $(wildcard include/*.cpp) $(wildcard src/*.cpp)
-OBJ = $(SRC:.cpp=.o) src/main.o  # 👈 on ajoute main.o manuellement
+OBJ = $(SRC:.cpp=.o) src/main.o  
 
 # Règle par défaut
 all: $(TARGET)
