@@ -1,13 +1,18 @@
 #include "../src/tile.hpp"
 #include "../src/board.hpp"
+#include "../src/cell.hpp"
 #include <algorithm>
+#include <iostream>
 
-// Constructeur
-Tile::Tile(const std::vector<std::vector<int>>& shape)
-    : shape(shape), width(shape[0].size()), height(shape.size()) {}
+// Constructeur sécurisé
+Tile::Tile(const std::vector<std::vector<int>>& s)
+    : shape(s),
+      width(s.empty() ? 0 : s[0].size()),
+      height(s.size()) {}
 
 // Rotation 90° (transpose + reverse)
 void Tile::rotate() {
+    if (shape.empty()) return;
     std::vector<std::vector<int>> rotated(width, std::vector<int>(height));
     for (int i = 0; i < height; ++i) {
         for (int j = 0; j < width; ++j) {
@@ -18,21 +23,50 @@ void Tile::rotate() {
     std::swap(width, height);
 }
 
-// Flip horizontal
-void Tile::flip() {
+// Flip horizontal (miroir gauche-droite)
+void Tile::flipH() {
     for (auto& row : shape) {
         std::reverse(row.begin(), row.end());
     }
 }
 
-// Vérifie si la tuile peut être placée (logique à compléter)
+// Flip vertical (miroir haut-bas)
+void Tile::flipV() {
+    std::reverse(shape.begin(), shape.end());
+}
+
+// Vérifie si la tuile peut être placée
 bool Tile::canPlace(const Board& board, int row, int col) const {
-    // TODO: vérifier si toutes les cases de la tuile rentrent dans le plateau
-    // et ne chevauchent pas d'autres territoires
+    for (int i = 0; i < height; ++i) {
+        for (int j = 0; j < width; ++j) {
+            if (shape[i][j] == 0) continue;
+
+            int r = row + i;
+            int c = col + j;
+
+            // Vérifie les limites
+            if (r < 0 || c < 0 || r >= board.getSize() || c >= board.getSize()) {
+                std::cerr << "Placement hors limites (" << r << "," << c << ")\n";
+                return false;
+            }
+
+            // Vérifie si la case est libre
+            const Cell& cell = board.at(r, c);
+            if (!cell.isEmpty() || cell.getTerrain() == Terrain::Stone) {
+                std::cerr << "Collision avec une case occupée (" << r << "," << c << ")\n";
+                return false;
+            }
+        }
+    }
     return true;
 }
 
-// Getters
-int Tile::getWidth() const { return width; }
-int Tile::getHeight() const { return height; }
-const std::vector<std::vector<int>>& Tile::getShape() const { return shape; }
+// Affichage console de la tuile
+void Tile::print() const {
+    for (const auto& row : shape) {
+        for (int val : row) {
+            std::cout << (val ? "■" : ".") << " ";
+        }
+        std::cout << "\n";
+    }
+}

@@ -2,6 +2,7 @@
 #define TILE_HPP
 
 #include <vector>
+#include <iostream>
 
 class Board; // Forward declaration
 
@@ -12,20 +13,24 @@ private:
     int height;
 
 public:
-    // Constructeur
+    // Constructeur sécurisé
     Tile(const std::vector<std::vector<int>>& shape);
 
     // Transformations
-    void rotate();   // rotation 90°
-    void flip();     // symétrie horizontale/verticale
+    void rotate();   // rotation 90° horaire
+    void flipH();    // symétrie horizontale
+    void flipV();    // symétrie verticale
 
     // Vérification placement
     bool canPlace(const Board& board, int row, int col) const;
 
     // Getters
-    int getWidth() const;
-    int getHeight() const;
-    const std::vector<std::vector<int>>& getShape() const;
+    int getWidth() const { return width; }
+    int getHeight() const { return height; }
+    const std::vector<std::vector<int>>& getShape() const { return shape; }
+
+    // Affichage console
+    void print() const;
 };
 
 #endif

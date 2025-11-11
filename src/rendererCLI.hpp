@@ -10,6 +10,13 @@ public:
     void displayBoard(const Board& board) const;
     void displayPlayerStatus(const Player& player) const;
     void displayQueue(const TileQueue& queue) const;
+
+    void displayBoardWithPreview(const Board& board,
+                             const std::vector<Player>& players,
+                             const Tile& tile,
+                             int row, int col) const;
+
+    void displayTile(const Tile& tile) const;
 };
 
 #endif
