@@ -14,3 +14,4 @@ int BonusSquare::getRow() const {
 int BonusSquare::getCol() const {
     return col;
 }
+

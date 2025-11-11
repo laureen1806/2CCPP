@@ -19,10 +19,12 @@ private:
 public:
     // Constructeur
     Player(const std::string& name, const std::string& color, int id);
+    Tile removeLastTile();
 
     // Gestion des tuiles
     void placeTile(Tile& tile);
     void useCoupon();
+    void addCoupon();
 
     // Calculs sur le territoire
     int calculateLargestSquare(const Board& board) const;
@@ -33,6 +35,7 @@ public:
     std::string getColor() const;
     int getCoupons() const;
     int getId() const;   // ← AJOUTÉ
+    const std::vector<Tile>& getTerritory() const; 
 };
 
 #endif

@@ -3,7 +3,7 @@
 
 #include <vector>
 
-class Board; // Forward declaration
+class Board;
 
 class Tile {
 private:
@@ -15,12 +15,10 @@ public:
     // Constructeur
     Tile(const std::vector<std::vector<int>>& shape);
 
-    // Transformations
-    void rotate();   // rotation 90°
-    void flip();     // symétrie horizontale/verticale
+    void rotate();
+    void flip();
 
-    // Vérification placement
-    bool canPlace(const Board& board, int row, int col) const;
+    bool canPlace(const Board& board, int row, int col, int playerId) const;
 
     // Getters
     int getWidth() const;

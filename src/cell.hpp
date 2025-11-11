@@ -21,6 +21,7 @@ public:
 
     bool isEmpty() const;
     bool isGrass() const;
+    bool isStone() const;
     void setGrass(int playerId);
     void setStone();
     void setBonus(BonusType type);
