@@ -1,125 +1,128 @@
 #include "tileFactory.hpp"
+#include "tile.hpp"
+#include <vector>
 
-// 96 tuiles codées à la main
 static std::vector<Tile> allTiles = {
     // 1-carré
-    Tile({{1}}),
+    Tile(std::vector<std::vector<int>>{{1}}),
 
     // 2-lignes
-    Tile({{1, 1}}),
-    Tile({{1}, {1}}),
+    Tile(std::vector<std::vector<int>>{{1,1}}),
+    Tile(std::vector<std::vector<int>>{{1},{1}}),
 
     // 3-lignes
-    Tile({{1, 1, 1}}),
-    Tile({{1}, {1}, {1}}),
+    Tile(std::vector<std::vector<int>>{{1,1,1}}),
+    Tile(std::vector<std::vector<int>>{{1},{1},{1}}),
 
     // 4-lignes
-    Tile({{1, 1, 1, 1}}),
-    Tile({{1}, {1}, {1}, {1}}),
+    Tile(std::vector<std::vector<int>>{{1,1,1,1}}),
+    Tile(std::vector<std::vector<int>>{{1},{1},{1},{1}}),
 
     // 2x2 carré
-    Tile({{1, 1}, {1, 1}}),
+    Tile(std::vector<std::vector<int>>{{1,1},{1,1}}),
 
     // L-shapes
-    Tile({{1, 0}, {1, 0}, {1, 1}}),
-    Tile({{0, 1}, {0, 1}, {1, 1}}),
-    Tile({{1, 1}, {1, 0}, {1, 0}}),
-    Tile({{1, 1}, {0, 1}, {0, 1}}),
+    Tile(std::vector<std::vector<int>>{{1,0},{1,0},{1,1}}),
+    Tile(std::vector<std::vector<int>>{{0,1},{0,1},{1,1}}),
+    Tile(std::vector<std::vector<int>>{{1,1},{1,0},{1,0}}),
+    Tile(std::vector<std::vector<int>>{{1,1},{0,1},{0,1}}),
 
     // T-shapes
-    Tile({{1, 1, 1}, {0, 1, 0}}),
-    Tile({{0, 1}, {1, 1}, {0, 1}}),
-    Tile({{0, 1, 0}, {1, 1, 1}}),
-    Tile({{1, 0}, {1, 1}, {1, 0}}),
+    Tile(std::vector<std::vector<int>>{{1,1,1},{0,1,0}}),
+    Tile(std::vector<std::vector<int>>{{0,1},{1,1},{0,1}}),
+    Tile(std::vector<std::vector<int>>{{0,1,0},{1,1,1}}),
+    Tile(std::vector<std::vector<int>>{{1,0},{1,1},{1,0}}),
 
     // Z-shapes
-    Tile({{1, 1, 0}, {0, 1, 1}}),
-    Tile({{0, 1, 1}, {1, 1, 0}}),
-    Tile({{1, 0}, {1, 1}, {0, 1}}),
-    Tile({{0, 1}, {1, 1}, {1, 0}}),
+    Tile(std::vector<std::vector<int>>{{1,1,0},{0,1,1}}),
+    Tile(std::vector<std::vector<int>>{{0,1,1},{1,1,0}}),
+    Tile(std::vector<std::vector<int>>{{1,0},{1,1},{0,1}}),
+    Tile(std::vector<std::vector<int>>{{0,1},{1,1},{1,0}}),
 
     // S-shapes
-    Tile({{0, 1, 1}, {1, 1, 0}}),
-    Tile({{1, 1, 0}, {0, 1, 1}}),
-    Tile({{0, 1}, {1, 1}, {1, 0}}),
-    Tile({{1, 0}, {1, 1}, {0, 1}}),
+    Tile(std::vector<std::vector<int>>{{0,1,1},{1,1,0}}),
+    Tile(std::vector<std::vector<int>>{{1,1,0},{0,1,1}}),
+    Tile(std::vector<std::vector<int>>{{0,1},{1,1},{1,0}}),
+    Tile(std::vector<std::vector<int>>{{1,0},{1,1},{0,1}}),
 
     // U-shapes
-    Tile({{1, 0, 1}, {1, 1, 1}}),
-    Tile({{1, 1}, {0, 1}, {1, 1}}),
+    Tile(std::vector<std::vector<int>>{{1,0,1},{1,1,1}}),
+    Tile(std::vector<std::vector<int>>{{1,1},{0,1},{1,1}}),
 
     // Cross
-    Tile({{0, 1, 0}, {1, 1, 1}, {0, 1, 0}}),
+    Tile(std::vector<std::vector<int>>{{0,1,0},{1,1,1},{0,1,0}}),
 
     // Diagonals
-    Tile({{1, 0}, {0, 1}}),
-    Tile({{0, 1}, {1, 0}}),
+    Tile(std::vector<std::vector<int>>{{1,0},{0,1}}),
+    Tile(std::vector<std::vector<int>>{{0,1},{1,0}}),
 
     // Hooks
-    Tile({{1, 1}, {0, 1}}),
-    Tile({{1, 1}, {1, 0}}),
-    Tile({{1, 0}, {1, 1}}),
-    Tile({{0, 1}, {1, 1}}),
+    Tile(std::vector<std::vector<int>>{{1,1},{0,1}}),
+    Tile(std::vector<std::vector<int>>{{1,1},{1,0}}),
+    Tile(std::vector<std::vector<int>>{{1,0},{1,1}}),
+    Tile(std::vector<std::vector<int>>{{0,1},{1,1}}),
 
     // Big L
-    Tile({{1, 0, 0}, {1, 1, 1}}),
-    Tile({{0, 0, 1}, {1, 1, 1}}),
-    Tile({{1, 1, 1}, {1, 0, 0}}),
-    Tile({{1, 1, 1}, {0, 0, 1}}),
+    Tile(std::vector<std::vector<int>>{{1,0,0},{1,1,1}}),
+    Tile(std::vector<std::vector<int>>{{0,0,1},{1,1,1}}),
+    Tile(std::vector<std::vector<int>>{{1,1,1},{1,0,0}}),
+    Tile(std::vector<std::vector<int>>{{1,1,1},{0,0,1}}),
 
     // Big T
-    Tile({{1, 1, 1}, {0, 1, 0}, {0, 1, 0}}),
-    Tile({{0, 1, 0}, {1, 1, 1}, {0, 1, 0}}),
+    Tile(std::vector<std::vector<int>>{{1,1,1},{0,1,0},{0,1,0}}),
+    Tile(std::vector<std::vector<int>>{{0,1,0},{1,1,1},{0,1,0}}),
 
     // Big Z
-    Tile({{1, 1, 0}, {0, 1, 1}, {0, 0, 1}}),
-    Tile({{0, 0, 1}, {0, 1, 1}, {1, 1, 0}}),
+    Tile(std::vector<std::vector<int>>{{1,1,0},{0,1,1},{0,0,1}}),
+    Tile(std::vector<std::vector<int>>{{0,0,1},{0,1,1},{1,1,0}}),
 
     // Big S
-    Tile({{0, 1, 1}, {1, 1, 0}, {1, 0, 0}}),
-    Tile({{1, 0, 0}, {1, 1, 0}, {0, 1, 1}}),
+    Tile(std::vector<std::vector<int>>{{0,1,1},{1,1,0},{1,0,0}}),
+    Tile(std::vector<std::vector<int>>{{1,0,0},{1,1,0},{0,1,1}}),
 
     // 3x3 blocks
-    Tile({{1, 1, 1}, {1, 0, 1}, {1, 1, 1}}),
-    Tile({{1, 1, 1}, {1, 1, 1}, {1, 1, 1}}),
+    Tile(std::vector<std::vector<int>>{{1,1,1},{1,0,1},{1,1,1}}),
+    Tile(std::vector<std::vector<int>>{{1,1,1},{1,1,1},{1,1,1}}),
 
     // Asymmetric
-    Tile({{1, 1, 0}, {0, 1, 0}, {0, 1, 1}}),
-    Tile({{0, 1, 1}, {0, 1, 0}, {1, 1, 0}}),
+    Tile(std::vector<std::vector<int>>{{1,1,0},{0,1,0},{0,1,1}}),
+    Tile(std::vector<std::vector<int>>{{0,1,1},{0,1,0},{1,1,0}}),
 
     // Snake
-    Tile({{1, 0}, {1, 1}, {0, 1}, {0, 1}}),
-    Tile({{0, 1}, {1, 1}, {1, 0}, {1, 0}}),
+    Tile(std::vector<std::vector<int>>{{1,0},{1,1},{0,1},{0,1}}),
+    Tile(std::vector<std::vector<int>>{{0,1},{1,1},{1,0},{1,0}}),
 
     // Long shapes
-    Tile({{1, 1, 1, 1, 1}}),
-    Tile({{1}, {1}, {1}, {1}, {1}}),
+    Tile(std::vector<std::vector<int>>{{1,1,1,1,1}}),
+    Tile(std::vector<std::vector<int>>{{1},{1},{1},{1},{1}}),
 
     // Complex
-    Tile({{1, 1, 0}, {1, 1, 1}, {0, 1, 1}}),
-    Tile({{0, 1, 1}, {1, 1, 1}, {1, 1, 0}}),
+    Tile(std::vector<std::vector<int>>{{1,1,0},{1,1,1},{0,1,1}}),
+    Tile(std::vector<std::vector<int>>{{0,1,1},{1,1,1},{1,1,0}}),
 
     // Variants
-    Tile({{1, 0, 1}, {0, 1, 0}, {1, 0, 1}}),
-    Tile({{1, 1, 0}, {0, 1, 0}, {0, 1, 1}}),
-    Tile({{0, 1, 1}, {0, 1, 0}, {1, 1, 0}}),
-    Tile({{1, 0, 0}, {1, 1, 0}, {0, 1, 1}}),
-    Tile({{0, 0, 1}, {0, 1, 1}, {1, 1, 0}}),
-    Tile({{1, 0, 1}, {1, 1, 1}, {1, 0, 1}}),
-    Tile({{1, 1, 1}, {1, 0, 1}, {1, 1, 1}}),
-    Tile({{1, 1, 0}, {1, 0, 1}, {0, 1, 1}}),
-    Tile({{0, 1, 1}, {1, 0, 1}, {1, 1, 0}}),
-    Tile({{1, 0, 1}, {0, 1, 0}, {1, 0, 1}}),
-    Tile({{1, 1, 1}, {0, 1, 0}, {1, 1, 1}}),
-    Tile({{1, 0, 1}, {1, 1, 1}, {0, 1, 0}}),
-    Tile({{0, 1, 0}, {1, 1, 1}, {1, 0, 1}}),
-    Tile({{1, 1, 0}, {0, 1, 0}, {0, 1, 1}}),
-    Tile({{0, 1, 1}, {0, 1, 0}, {1, 1, 0}}),
-    Tile({{1, 0, 0}, {1, 1, 0}, {0, 1, 1}}),
-    Tile({{0, 0, 1}, {0, 1, 1}, {1, 1, 0}}),
-    Tile({{1, 1, 1}, {1, 0, 0}, {1, 1, 1}}),
-    Tile({{1, 1, 1}, {0, 0, 1}, {1, 1, 1}}),
-    Tile({{1, 1, 1}, {0, 1, 0}, {1, 1, 1}})
+    Tile(std::vector<std::vector<int>>{{1,0,1},{0,1,0},{1,0,1}}),
+    Tile(std::vector<std::vector<int>>{{1,1,0},{0,1,0},{0,1,1}}),
+    Tile(std::vector<std::vector<int>>{{0,1,1},{0,1,0},{1,1,0}}),
+    Tile(std::vector<std::vector<int>>{{1,0,0},{1,1,0},{0,1,1}}),
+    Tile(std::vector<std::vector<int>>{{0,0,1},{0,1,1},{1,1,0}}),
+    Tile(std::vector<std::vector<int>>{{1,0,1},{1,1,1},{1,0,1}}),
+    Tile(std::vector<std::vector<int>>{{1,1,1},{1,0,1},{1,1,1}}),
+    Tile(std::vector<std::vector<int>>{{1,1,0},{1,0,1},{0,1,1}}),
+    Tile(std::vector<std::vector<int>>{{0,1,1},{1,0,1},{1,1,0}}),
+    Tile(std::vector<std::vector<int>>{{1,0,1},{0,1,0},{1,0,1}}),
+    Tile(std::vector<std::vector<int>>{{1,1,1},{0,1,0},{1,1,1}}),
+    Tile(std::vector<std::vector<int>>{{1,0,1},{1,1,1},{0,1,0}}),
+    Tile(std::vector<std::vector<int>>{{0,1,0},{1,1,1},{1,0,1}}),
+    Tile(std::vector<std::vector<int>>{{1,1,0},{0,1,0},{0,1,1}}),
+    Tile(std::vector<std::vector<int>>{{0,1,1},{0,1,0},{1,1,0}}),
+    Tile(std::vector<std::vector<int>>{{1,0,0},{1,1,0},{0,1,1}}),
+    Tile(std::vector<std::vector<int>>{{0,0,1},{0,1,1},{1,1,0}}),
+    Tile(std::vector<std::vector<int>>{{1,1,1},{1,0,0},{1,1,1}}),
+    Tile(std::vector<std::vector<int>>{{1,1,1},{0,0,1},{1,1,1}}),
+    Tile(std::vector<std::vector<int>>{{1,1,1},{0,1,0},{1,1,1}})
 };
 
-const std::vector<Tile>& TileFactory::
+const std::vector<Tile>& TileFactory::getAllTiles() {
+    return allTiles;
+}
