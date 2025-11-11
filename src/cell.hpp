@@ -12,26 +12,27 @@ enum class Terrain {
 
 class Cell {
 private:
-    Terrain terrain = Terrain::Empty;
-    int playerId = -1;
-    BonusType bonus = BonusType::NONE; // adapte selon ta définition
-    char symbol = '.'; // utilisé seulement si tu affiches via symbol
+    Terrain terrain;
+    int playerId;
+    BonusType bonus;
+    char symbol;
 
 public:
-    Cell() = default;
+    Cell();
 
-    bool isEmpty() const { return terrain == Terrain::Empty && playerId == -1; }
-    bool isGrass() const { return terrain == Terrain::Grass; }
-    void setGrass(int pid) { terrain = Terrain::Grass; playerId = pid; symbol = char('0' + (pid % 10)); }
-    void setStone() { terrain = Terrain::Stone; symbol = '#'; }
-    void setBonus(BonusType type) { terrain = Terrain::Bonus; bonus = type; symbol = '*'; }
+    bool isEmpty() const;
+    bool isGrass() const;
+    void setGrass(int pid);
+    void setStone();
+    void setBonus(BonusType type);
 
-    int getPlayerId() const { return playerId; }
-    Terrain getTerrain() const { return terrain; }
-    BonusType getBonus() const { return bonus; }
+    int getPlayerId() const;
+    Terrain getTerrain() const;
+    BonusType getBonus() const;
 
-    char getSymbol() const { return symbol; }
-    void setSymbol(char s) { symbol = s; }
+    char getSymbol() const;
+    void setSymbol(char s);
 };
+
 
 #endif

@@ -22,9 +22,16 @@ public:
         return tiles.front();
     }
 
-    // Supprimer une tuile
+    // Supprimer une tuile à une position donnée
     void erase(std::vector<Tile>::iterator pos) {
         tiles.erase(pos);
+    }
+
+    // Supprimer la première tuile (comme une file FIFO)
+    void pop_front() {
+        if (!tiles.empty()) {
+            tiles.erase(tiles.begin());
+        }
     }
 
     // Accès à begin()
@@ -45,9 +52,8 @@ public:
         tiles.clear();
     }
 
-    const std::vector<Tile>& getTiles() const {
-        return tiles;
-    }
+    // Accès en lecture seule à toutes les tuiles
+    const std::vector<Tile>& getTiles() const ;
 };
 
 #endif

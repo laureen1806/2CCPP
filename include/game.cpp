@@ -66,14 +66,13 @@ void Game::initializeTiles(int nbPlayers) {
     auto all = TileFactory::getAllTiles();
     if (all.empty()) {
         std::cerr << "Aucune tuile disponible.\n";
-        tileQueue.clear();
+        tileQueue.clear();   // ✅ maintenant ça compile
         return;
     }
 
     std::vector<Tile> shuffled = all;
     std::shuffle(shuffled.begin(), shuffled.end(), std::mt19937{std::random_device{}()});
 
-    // Ne pas dépasser le nombre de tuiles disponibles
     int take = std::min(totalTiles, static_cast<int>(shuffled.size()));
     tileQueue.assign(shuffled.begin(), shuffled.begin() + take);
 }
@@ -85,7 +84,7 @@ void Game::playTurn(Player& player) {
     }
 
     Tile currentTile = tileQueue.front();
-    tileQueue.erase(tileQueue.begin());
+    tileQueue.pop_front();   // ✅ plus propre
 
     RendererCLI renderer;
     InputManager input;
@@ -98,7 +97,7 @@ void Game::playTurn(Player& player) {
         renderer.displayBoardWithPreview(*board, players, currentTile, previewRow, previewCol);
 
         std::cout << "\nCommandes disponibles :\n";
-        std::cout << "M row col : Déplacer la tuile en prévisualisation\n";
+        std::cout << "M row col : Déplacer la tuile\n";
         std::cout << "R         : Rotation 90° horaire\n";
         std::cout << "FH        : Flip horizontal\n";
         std::cout << "FV        : Flip vertical\n";
@@ -107,34 +106,37 @@ void Game::playTurn(Player& player) {
 
         std::string cmd = input.getCommand();
 
-        if (cmd == "R") {
-            currentTile.rotate();
-        } else if (cmd == "FH") {
-            currentTile.flipH();
-        } else if (cmd == "FV") {
-            currentTile.flipV();
-        } else if (cmd == "M") {
+        if (cmd == "R") currentTile.rotate();
+        else if (cmd == "FH") currentTile.flipH();
+        else if (cmd == "FV") currentTile.flipV();
+        else if (cmd == "M") {
             auto [row, col] = input.getCoordinates();
-            // Borne la preview pour éviter hors limites
             int n = board->getSize();
-            if (row < 0 || row >= n || col < 0 || col >= n) {
-                std::cout << "Position invalide (" << row << ", " << col << ").\n";
-            } else {
+            if (row >= 0 && row < n && col >= 0 && col < n) {
                 previewRow = row;
                 previewCol = col;
+            } else {
+                std::cout << "Position invalide.\n";
             }
-        } else if (cmd == "V") {
+        }
+        else if (cmd == "V") {
             if (currentTile.canPlace(*board, previewRow, previewCol)) {
                 board->placeTile(currentTile, player, previewRow, previewCol);
                 validated = true;
             } else {
-                std::cout << "Placement impossible, réessaie.\n";
+                std::cout << "Placement impossible.\n";
             }
-        } else if (cmd == "Q") {
+        }
+        else if (cmd == "Q") {
             std::cout << "Tour passé.\n";
             break;
-        } else {
-            std::cout << "Commande inconnue.\n";
         }
+    }
+}
+
+void Game::playRound() {
+    for (auto& player : players) {
+        playTurn(player);
+        if (tileQueue.empty()) break;
     }
 }
