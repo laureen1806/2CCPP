@@ -36,6 +36,8 @@ public:
     // Joue le tour d’un joueur
     void playTurn(Player& player);
 
+    void placeStartingTile(Player& player);
+
     // Accesseurs utiles
     Board& getBoard() { return *board; }
     const std::vector<Player>& getPlayers() const { return players; }

@@ -5,6 +5,7 @@
 #include <iostream>
 
 class Board; // Forward declaration
+class Player;
 
 class Tile {
 private:
@@ -22,7 +23,7 @@ public:
     void flipV();    // symétrie verticale
 
     // Vérification placement
-    bool canPlace(const Board& board, int row, int col) const;
+    bool canPlace(const Board& board, int row, int col, const Player& player) const;
 
     // Getters
     int getWidth() const { return width; }

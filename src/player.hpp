@@ -1,5 +1,5 @@
-#ifndef PLAYER_H
-#define PLAYER_H
+#ifndef PLAYER_HPP
+#define PLAYER_HPP
 
 #include <string>
 #include <vector>
@@ -16,6 +16,9 @@ private:
     int id;
     int coupons;
 
+    // 👇 Ajoute ces deux attributs pour mémoriser la base
+    int baseRow = -1;
+    int baseCol = -1;
 
 public:
     // Constructeur
@@ -25,6 +28,20 @@ public:
     void placeTile(Tile& tile);
     void useCoupon();
 
+    // Gestion de la base de départ
+    void setBase(int row, int col) {
+        baseRow = row;
+        baseCol = col;
+    }
+
+    std::pair<int,int> getBase() const {
+        return {baseRow, baseCol};
+    }
+
+    bool hasBase() const {
+        return baseRow != -1 && baseCol != -1;
+    }
+
     // Calculs sur le territoire
     int calculateLargestSquare(const Board& board) const;
     int countGrassCells(const Board& board) const;
@@ -33,7 +50,7 @@ public:
     std::string getName() const;
     std::string getColor() const;
     int getCoupons() const;
-    int getId() const;   // ← AJOUTÉ
+    int getId() const;
 };
 
 #endif

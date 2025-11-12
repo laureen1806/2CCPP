@@ -11,9 +11,18 @@ std::string InputManager::getCommand() const {
 
 // Récupère des coordonnées
 std::pair<int,int> InputManager::getCoordinates() const {
-    int row, col;
-    std::cout << "Entrez la ligne et la colonne: ";
-    std::cin >> row >> col;
+    std::string rowStr, colStr;
+    std::cin >> rowStr >> colStr;
+
+    auto toIndex = [](const std::string& s) -> int {
+        if (s.size() == 1 && std::isalpha(s[0])) {
+            return std::toupper(s[0]) - 'A'; // A=0, B=1, etc.
+        }
+        return std::stoi(s); // sinon, interpréter comme chiffre
+    };
+
+    int row = toIndex(rowStr);
+    int col = toIndex(colStr);
     return {row, col};
 }
 

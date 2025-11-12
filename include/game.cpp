@@ -22,7 +22,6 @@ Game::Game(int nbPlayers) : currentRound(0) {
     players.clear();
     players.reserve(nbPlayers);
     for (int i = 0; i < nbPlayers; ++i) {
-        // Couleurs simples alternées, adapte si tu as une palette
         std::string color = (i % 2 == 0) ? "Red" : "Blue";
         players.emplace_back("Joueur" + std::to_string(i + 1), color, i);
     }
@@ -36,13 +35,17 @@ Game::Game(int nbPlayers) : currentRound(0) {
 }
 
 void Game::endGame() {
-    // TODO: logique de fin de partie (scores, annonces, etc.)
+    std::cout << "\n=== Fin de partie ===\n";
+    RendererCLI renderer;
+    renderer.displayBoard(*board);
+
+    Player winner = getWinner();
+    std::cout << "Vainqueur : " << winner.getName() << "\n";
 }
 
 Player Game::getWinner() const {
     if (players.empty()) {
         std::cerr << "Aucun joueur — impossible de déterminer le vainqueur.\n";
-        // Comportement par défaut: retourner une copie "neutre"
         return Player("N/A", "None", -1);
     }
 
@@ -66,7 +69,7 @@ void Game::initializeTiles(int nbPlayers) {
     auto all = TileFactory::getAllTiles();
     if (all.empty()) {
         std::cerr << "Aucune tuile disponible.\n";
-        tileQueue.clear();   // ✅ maintenant ça compile
+        tileQueue.clear();
         return;
     }
 
@@ -77,6 +80,38 @@ void Game::initializeTiles(int nbPlayers) {
     tileQueue.assign(shuffled.begin(), shuffled.begin() + take);
 }
 
+void Game::placeStartingTile(Player& player) {
+    RendererCLI renderer;
+    InputManager input;
+
+    // Tuile de départ 1x1
+    Tile startTile(std::vector<std::vector<int>>{{1}});
+
+    bool placed = false;
+    while (!placed) {
+        std::cout << "\n=== Placement initial de " << player.getName() << " ===\n";
+        renderer.displayBoard(*board);
+
+        std::cout << "Choisis une case (row col) pour ta tuile de départ : ";
+        auto [r, c] = input.getCoordinates();
+
+        int n = board->getSize();
+        if (r < 0 || r >= n || c < 0 || c >= n) {
+            std::cout << "Position invalide.\n";
+            continue;
+        }
+
+        if (!board->at(r, c).isEmpty()) {
+            std::cout << "Case déjà occupée, choisis une autre.\n";
+            continue;
+        }
+
+        board->placeTile(startTile, player, r, c);
+        player.setBase(r, c);
+        placed = true;
+    }
+}
+
 void Game::playTurn(Player& player) {
     if (tileQueue.empty()) {
         std::cout << "Pas de tuiles à jouer.\n";
@@ -84,7 +119,7 @@ void Game::playTurn(Player& player) {
     }
 
     Tile currentTile = tileQueue.front();
-    tileQueue.pop_front();   // ✅ plus propre
+    tileQueue.pop_front();
 
     RendererCLI renderer;
     InputManager input;
@@ -120,7 +155,7 @@ void Game::playTurn(Player& player) {
             }
         }
         else if (cmd == "V") {
-            if (currentTile.canPlace(*board, previewRow, previewCol)) {
+            if (currentTile.canPlace(*board, previewRow, previewCol, player)) {
                 board->placeTile(currentTile, player, previewRow, previewCol);
                 validated = true;
             } else {
@@ -135,8 +170,18 @@ void Game::playTurn(Player& player) {
 }
 
 void Game::playRound() {
+    // Phase de placement initial au premier round
+    if (currentRound == 0) {
+        for (auto& player : players) {
+            placeStartingTile(player);
+        }
+    }
+
+    // Tours normaux
     for (auto& player : players) {
         playTurn(player);
         if (tileQueue.empty()) break;
     }
+
+    currentRound++;
 }

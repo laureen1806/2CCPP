@@ -1,6 +1,7 @@
 #include "../src/tile.hpp"
 #include "../src/board.hpp"
 #include "../src/cell.hpp"
+#include "../src/player.hpp"
 #include <algorithm>
 #include <iostream>
 
@@ -36,30 +37,52 @@ void Tile::flipV() {
 }
 
 // Vérifie si la tuile peut être placée
-bool Tile::canPlace(const Board& board, int row, int col) const {
-    for (int i = 0; i < height; ++i) {
-        for (int j = 0; j < width; ++j) {
-            if (shape[i][j] == 0) continue;
+bool Tile::canPlace(const Board& board, int row, int col, const Player& player) const {
+    int n = board.getSize();
+    auto shape = getShape();
 
-            int r = row + i;
-            int c = col + j;
+    bool touchesTerritory = false;
 
-            // Vérifie les limites
-            if (r < 0 || c < 0 || r >= board.getSize() || c >= board.getSize()) {
-                std::cerr << "Placement hors limites (" << r << "," << c << ")\n";
-                return false;
-            }
+    for (int r = 0; r < (int)shape.size(); ++r) {
+        for (int c = 0; c < (int)shape[r].size(); ++c) {
+            if (shape[r][c] == 0) continue;
 
-            // Vérifie si la case est libre
-            const Cell& cell = board.at(r, c);
-            if (!cell.isEmpty() || cell.getTerrain() == Terrain::Stone) {
-                std::cerr << "Collision avec une case occupée (" << r << "," << c << ")\n";
-                return false;
+            int rr = row + r;
+            int cc = col + c;
+
+            // Vérifier limites
+            if (rr < 0 || rr >= n || cc < 0 || cc >= n) return false;
+
+            const Cell& cell = board.at(rr, cc);
+
+            // Interdiction de recouvrir une case déjà occupée
+            if (!cell.isEmpty()) return false;
+
+            // Interdiction de recouvrir la base du joueur
+            auto [baseRow, baseCol] = player.getBase();
+            if (rr == baseRow && cc == baseCol) return false;
+
+            // Vérifier la connexion au territoire du joueur
+            // On regarde les 4 voisins
+            const int dr[4] = {-1, 1, 0, 0};
+            const int dc[4] = {0, 0, -1, 1};
+            for (int k = 0; k < 4; ++k) {
+                int nr = rr + dr[k];
+                int nc = cc + dc[k];
+                if (nr >= 0 && nr < n && nc >= 0 && nc < n) {
+                    const Cell& neighbor = board.at(nr, nc);
+                    if (neighbor.isGrass() && neighbor.getPlayerId() == player.getId()) {
+                        touchesTerritory = true;
+                    }
+                }
             }
         }
     }
-    return true;
+
+    // Il faut au moins une connexion
+    return touchesTerritory;
 }
+
 
 // Affichage console de la tuile
 void Tile::print() const {
