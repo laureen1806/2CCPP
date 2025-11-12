@@ -14,16 +14,35 @@ Game::Game(int nbPlayers) : currentRound(0) {
         std::cerr << "Il faut au moins 2 joueurs.\n";
         nbPlayers = 2;
     }
+    if (nbPlayers > 9) {
+        std::cerr << "Maximum 9 joueurs.\n";
+        nbPlayers = 9;
+    }
 
+    // Taille du plateau : 20x20 pour 2–4 joueurs, 30x30 pour 5–9
     int size = (nbPlayers <= 4) ? 20 : 30;
     board = std::make_unique<Board>(size);
 
-    // Construire les joueurs
+    // Palette de couleurs (jusqu’à 9 joueurs)
+    const std::vector<std::string> palette = {
+        "Red", "Blue", "Green", "Yellow", "Magenta",
+        "Cyan", "Orange", "Purple", "Teal"
+    };
+
+    // Construire les joueurs avec saisie des noms
     players.clear();
     players.reserve(nbPlayers);
+
     for (int i = 0; i < nbPlayers; ++i) {
-        std::string color = (i % 2 == 0) ? "Red" : "Blue";
-        players.emplace_back("Joueur" + std::to_string(i + 1), color, i);
+        std::string name;
+        std::cout << "Entrez le nom du joueur " << (i + 1) << " : ";
+        std::getline(std::cin >> std::ws, name);
+        if (name.empty()) {
+            name = "Joueur" + std::to_string(i + 1);
+        }
+
+        std::string color = palette[i % palette.size()];
+        players.emplace_back(name, color, i);
     }
 
     // Mélanger l’ordre des joueurs
@@ -33,6 +52,7 @@ Game::Game(int nbPlayers) : currentRound(0) {
 
     initializeTiles(nbPlayers);
 }
+
 
 void Game::endGame() {
     std::cout << "\n=== Fin de partie ===\n";
@@ -118,9 +138,7 @@ void Game::playTurn(Player& player) {
         return;
     }
 
-    Tile currentTile = tileQueue.front();
-    tileQueue.pop_front();
-
+    Tile currentTile = tileQueue.getNextTile(); // retire la première tuile
     RendererCLI renderer;
     InputManager input;
 
@@ -129,6 +147,43 @@ void Game::playTurn(Player& player) {
 
     while (!validated) {
         std::cout << "\n=== Tour de " << player.getName() << " ===\n";
+        std::cout << "Coupons restants : " << player.getCoupons() << "\n\n";
+
+        auto nextFive = tileQueue.peekNext(5);
+        std::cout << "=== Prochaines tuiles dans la file ===\n";
+
+        if (nextFive.empty()) {
+            std::cout << "(aucune tuile restante)\n";
+        } else {
+            // Déterminer la hauteur maximale pour l'affichage côte à côte
+            int maxRows = 0;
+                for (const auto& t : nextFive)
+                maxRows = std::max(maxRows, (int)t.getShape().size());
+
+            // Pour chaque ligne de la tuile
+            for (int r = 0; r < maxRows; ++r) {
+                for (size_t i = 0; i < nextFive.size(); ++i) {
+                    const auto& shape = nextFive[i].getShape();
+                    if (r < (int)shape.size()) {
+                        for (int cell : shape[r])
+                            std::cout << (cell ? "■" : ".");
+                    } else {
+                        for (int k = 0; k < (int)shape[0].size(); ++k)
+                            std::cout << " ";
+                    }
+                    std::cout << "   "; // espacement entre les tuiles
+                }
+                std::cout << "\n";
+            }
+        
+            // Indiquer les indices sous les tuiles
+            for (size_t i = 0; i < nextFive.size(); ++i)
+                std::cout << "  (" << i + 1 << ")      ";
+            std::cout << "\n";
+        }
+        std::cout << "\nTuile actuelle à placer :\n";
+        currentTile.print(); 
+
         renderer.displayBoardWithPreview(*board, players, currentTile, previewRow, previewCol);
 
         std::cout << "\nCommandes disponibles :\n";
@@ -136,6 +191,7 @@ void Game::playTurn(Player& player) {
         std::cout << "R         : Rotation 90° horaire\n";
         std::cout << "FH        : Flip horizontal\n";
         std::cout << "FV        : Flip vertical\n";
+        std::cout << "E i       : Échanger avec la tuile i (1-5) en utilisant un coupon\n";
         std::cout << "V         : Valider le placement\n";
         std::cout << "Q         : Quitter le tour\n";
 
@@ -153,6 +209,25 @@ void Game::playTurn(Player& player) {
             } else {
                 std::cout << "Position invalide.\n";
             }
+        }
+        else if (cmd == "E") {
+            if (player.getCoupons() <= 0) {
+                std::cout << "Tu n’as plus de coupon pour échanger.\n";
+                continue;
+            }
+
+            std::cout << "Choisis la tuile (1-5) à échanger : ";
+            int idx;
+            std::cin >> idx;
+            if (idx < 1 || idx > 5 || idx > (int)tileQueue.size()) {
+                std::cout << "Indice invalide.\n";
+                continue;
+            }
+
+            Tile newTile = tileQueue.takeAt(idx - 1);
+            player.useCoupon();
+            std::cout << "Tuile échangée avec la tuile #" << idx << " !\n";
+            currentTile = newTile;
         }
         else if (cmd == "V") {
             if (currentTile.canPlace(*board, previewRow, previewCol, player)) {
@@ -185,3 +260,9 @@ void Game::playRound() {
 
     currentRound++;
 }
+
+bool Game::hasTiles() const {
+    return !tileQueue.empty();
+}
+
+

@@ -83,7 +83,6 @@ bool Tile::canPlace(const Board& board, int row, int col, const Player& player) 
     return touchesTerritory;
 }
 
-
 // Affichage console de la tuile
 void Tile::print() const {
     for (const auto& row : shape) {
@@ -92,4 +91,20 @@ void Tile::print() const {
         }
         std::cout << "\n";
     }
+}
+
+void Tile::printSmall() const {
+    int rows = shape.size();
+    int cols = shape[0].size();
+    std::cout << rows << "x" << cols << " ";
+}
+
+void Tile::printInline() const {
+    std::cout << "[";
+    for (const auto& row : shape) {
+        for (int cell : row)
+            std::cout << (cell ? "■" : ".");
+        std::cout << "/";
+    }
+    std::cout << "]";
 }

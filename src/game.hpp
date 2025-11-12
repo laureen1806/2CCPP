@@ -18,6 +18,8 @@ public:
     // Constructeur : crée le plateau et les joueurs
     Game(int nbPlayers);
 
+    bool hasTiles() const;
+
     // Initialisation complète de la partie
     void initGame();
 

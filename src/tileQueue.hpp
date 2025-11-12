@@ -1,59 +1,37 @@
 #ifndef TILE_QUEUE_HPP
 #define TILE_QUEUE_HPP
 
-#include <vector>
+#include <queue>
 #include "tile.hpp"
+#include <deque>
+#include <vector>
 
 class TileQueue {
 private:
-    std::vector<Tile> tiles;
-
+    std::deque<Tile> queue;
 public:
-    TileQueue() = default;
+    bool empty() const;
+    size_t size() const;
 
-    // Remplir la queue avec une liste de tuiles
-    template<typename Iter>
-    void assign(Iter first, Iter last) {
-        tiles.assign(first, last);
-    }
+    std::vector<Tile> peekNext(int count) const;
+    void pushBack(const Tile& tile);
 
-    // Récupérer la première tuile
-    Tile front() const {
-        return tiles.front();
-    }
+    // Retire et renvoie la première tuile
+    Tile getNextTile();
 
-    // Supprimer une tuile à une position donnée
-    void erase(std::vector<Tile>::iterator pos) {
-        tiles.erase(pos);
-    }
+    // Retire et renvoie la tuile à l’index spécifié
+    Tile takeAt(int index);
 
-    // Supprimer la première tuile (comme une file FIFO)
-    void pop_front() {
-        if (!tiles.empty()) {
-            tiles.erase(tiles.begin());
-        }
-    }
+    // Remplit la file à partir d’un vecteur
+    void assign(std::vector<Tile>::iterator begin, std::vector<Tile>::iterator end);
 
-    // Accès à begin()
-    std::vector<Tile>::iterator begin() {
-        return tiles.begin();
-    }
+    // Vide la file
+    void clear();
 
-    bool empty() const {
-        return tiles.empty();
-    }
-
-    size_t size() const {
-        return tiles.size();
-    }
-
-    // Vider la file
-    void clear() {
-        tiles.clear();
-    }
-
-    // Accès en lecture seule à toutes les tuiles
-    const std::vector<Tile>& getTiles() const ;
+    // avoir les prochaines tiles
+    const std::deque<Tile>& getTiles() const {
+    return queue;
+    }   
 };
 
 #endif

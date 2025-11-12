@@ -5,25 +5,32 @@
 #include "inputManager.hpp"
 #include "player.hpp"
 #include <iostream>
-#include <vector>
+#include <limits>
 
 int main() {
-    // Créer une partie avec 2 joueurs
-    Game game(2);
-
-    // Premier round = placement des tuiles de départ
-    game.playRound();
-
-    // Boucle de jeu : continuer jusqu’à la fin
+    int nbPlayers = 0;
     while (true) {
-        game.playRound();
-        // Condition de fin : plus de tuiles ou autre logique interne
-        if (game.getBoard().getSize() == 0) { // exemple, adapte selon ta logique
+        std::cout << "Nombre de joueurs (2 à 9) : ";
+        std::cin >> nbPlayers;
+        if (std::cin.fail() || nbPlayers < 2 || nbPlayers > 9) {
+            std::cin.clear();
+            std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+            std::cout << "⛔ Entrée invalide. Réessaie.\n";
+        } else {
             break;
         }
     }
 
-    // Fin de partie
+    Game game(nbPlayers);
+
+    // Premier round = placement des tuiles de départ
+    game.playRound();
+
+    // ✅ Boucle principale : continue tant qu’il reste des tuiles
+    while (game.hasTiles()) {
+        game.playRound();
+    }
+
     game.endGame();
     return 0;
 }

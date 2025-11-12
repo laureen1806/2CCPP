@@ -35,6 +35,8 @@ public:
 
     // Affichage console
     void print() const;
+    void printSmall()const;
+    void printInline() const;
 };
 
 #endif
