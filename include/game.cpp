@@ -57,7 +57,7 @@ Game::Game(int nbPlayers) : currentRound(0) {
 void Game::endGame() {
     std::cout << "\n=== Fin de partie ===\n";
     RendererCLI renderer;
-    renderer.displayBoard(*board);
+    renderer.displayBoard(*board, players);
 
     Player winner = getWinner();
     std::cout << "Vainqueur : " << winner.getName() << "\n";
@@ -110,7 +110,7 @@ void Game::placeStartingTile(Player& player) {
     bool placed = false;
     while (!placed) {
         std::cout << "\n=== Placement initial de " << player.getName() << " ===\n";
-        renderer.displayBoard(*board);
+        renderer.displayBoard(*board, players);
 
         std::cout << "Choisis une case (row col) pour ta tuile de départ : ";
         auto [r, c] = input.getCoordinates();

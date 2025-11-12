@@ -3,7 +3,23 @@
 #include <iostream>
 #include <vector>
 
-void RendererCLI::displayBoard(const Board& board) const {
+static std::string ansiColor(const std::string& name) {
+    if (name == "Red")     return "\x1b[31m";
+    if (name == "Blue")    return "\x1b[34m";
+    if (name == "Green")   return "\x1b[32m";
+    if (name == "Yellow")  return "\x1b[33m";
+    if (name == "Magenta") return "\x1b[35m";
+    if (name == "Cyan")    return "\x1b[36m";
+    if (name == "Orange")  return "\x1b[38;5;208m";
+    if (name == "Purple")  return "\x1b[38;5;93m";
+    if (name == "Teal")    return "\x1b[38;5;30m";
+    return "\x1b[0m"; // reset
+}
+static const char* RESET = "\x1b[0m";
+
+
+void RendererCLI::displayBoard(const Board& board,
+                               const std::vector<Player>& players) const {
     const int n = board.getSize();
     std::cout << "   ";
     for (int c = 0; c < n; ++c) std::cout << char('A' + (c % 26)) << " ";
@@ -13,77 +29,79 @@ void RendererCLI::displayBoard(const Board& board) const {
         std::cout << char('A' + (r % 26)) << "  ";
         for (int c = 0; c < n; ++c) {
             const Cell& cell = board.at(r, c);
-            char ch = '.';
-            if (cell.getTerrain() == Terrain::Stone) ch = '#';
-            else if (cell.getTerrain() == Terrain::Bonus) ch = '*';
-            else if (cell.isGrass()) ch = char('0' + (cell.getPlayerId() % 10));
-            std::cout << ch << " ";
+            if (cell.getTerrain() == Terrain::Stone) {
+                std::cout << "# ";
+            } else if (cell.getTerrain() == Terrain::Bonus) {
+                std::cout << "* ";
+            } else if (cell.isGrass()) {
+                int pid = cell.getPlayerId();
+                std::string color = (pid >= 0 && pid < (int)players.size())
+                    ? ansiColor(players[pid].getColor())
+                    : "";
+                std::cout << color << "■ " << RESET;
+            } else {
+                std::cout << ". ";
+            }
         }
         std::cout << "\n";
     }
 }
 
+
 void RendererCLI::displayBoardWithPreview(const Board& board,
-                                          const std::vector<Player>& /*players*/,
+                                          const std::vector<Player>& players,
                                           const Tile& tile,
                                           int row, int col) const
 {
     const int n = board.getSize();
 
-    // Build temp grid from board
-    std::vector<std::vector<char>> tempGrid(n, std::vector<char>(n, '.'));
-    for (int r = 0; r < n; ++r) {
-        for (int c = 0; c < n; ++c) {
-            const Cell& cell = board.at(r, c);
-            char ch = '.';
-            if (cell.getTerrain() == Terrain::Stone) ch = '#';
-            else if (cell.getTerrain() == Terrain::Bonus) ch = '*';
-            else if (cell.isGrass()) ch = char('0' + (cell.getPlayerId() % 10));
-            tempGrid[r][c] = ch;
-        }
-    }
-
-    // Overlay tile shape safely
-    const auto& shape = tile.getShape();
-    if (!shape.empty()) {
-        const int sh = static_cast<int>(shape.size());
-        const int sw = static_cast<int>(shape[0].size()); // assume rectangular; validate below
-
-        // Validate rectangular shape (avoid segfault on jagged shapes)
-        for (int rr = 1; rr < sh; ++rr) {
-            if (static_cast<int>(shape[rr].size()) != sw) {
-                std::cerr << "Tile shape rows have inconsistent widths. Aborting preview.\n";
-                // fall back to no overlay
-                goto render_only;
-            }
-        }
-
-        for (int tr = 0; tr < sh; ++tr) {
-            for (int tc = 0; tc < sw; ++tc) {
-                if (shape[tr][tc] == 1) {
-                    const int rr = row + tr;
-                    const int cc = col + tc;
-                    if (rr >= 0 && rr < n && cc >= 0 && cc < n) {
-                        tempGrid[rr][cc] = '?';
-                    }
-                }
-            }
-        }
-    }
-
-render_only:
-    // Render labeled grid
     std::cout << "   ";
     for (int c = 0; c < n; ++c) std::cout << char('A' + (c % 26)) << " ";
     std::cout << "\n";
+
     for (int r = 0; r < n; ++r) {
         std::cout << char('A' + (r % 26)) << "  ";
         for (int c = 0; c < n; ++c) {
-            std::cout << tempGrid[r][c] << " ";
+            const Cell& cell = board.at(r, c);
+
+            bool isPreview = false;
+            const auto& shape = tile.getShape();
+            if (!shape.empty()) {
+                int sh = (int)shape.size();
+                int sw = (int)shape[0].size();
+                if (r >= row && r < row + sh &&
+                    c >= col && c < col + sw &&
+                    shape[r - row][c - col] == 1) {
+                    isPreview = true;
+                }
+            }
+
+            if (isPreview) {
+                // Tuile fantôme → couleur du joueur actif mais atténuée
+                std::string color = ansiColor(players[0].getColor()); // ou joueur courant
+                std::cout << color << "? " << RESET;
+            }
+            else if (cell.getTerrain() == Terrain::Stone) {
+                std::cout << "# ";
+            }
+            else if (cell.getTerrain() == Terrain::Bonus) {
+                std::cout << "* ";
+            }
+            else if (cell.isGrass()) {
+                int pid = cell.getPlayerId();
+                std::string color = (pid >= 0 && pid < (int)players.size())
+                    ? ansiColor(players[pid].getColor())
+                    : "";
+                std::cout << color << "■ " << RESET;
+            }
+            else {
+                std::cout << ". ";
+            }
         }
         std::cout << "\n";
     }
 }
+
 
 void RendererCLI::displayTile(const Tile& tile) const {
     const auto& shape = tile.getShape();

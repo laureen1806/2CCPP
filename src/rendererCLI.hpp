@@ -5,9 +5,11 @@
 #include "player.hpp"
 #include "tileQueue.hpp"
 
+
 class RendererCLI {
 public:
-    void displayBoard(const Board& board) const;
+    void displayBoard(const Board& board,
+                      const std::vector<Player>& players) const;
     void displayPlayerStatus(const Player& player) const;
     void displayQueue(const TileQueue& queue) const;
 
