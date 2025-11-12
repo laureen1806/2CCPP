@@ -10,19 +10,33 @@ std::string InputManager::getCommand() const {
 }
 
 // Récupère des coordonnées
-std::pair<int,int> InputManager::getCoordinates() const {
+std::pair<int, int> InputManager::getCoordinates() {
     std::string rowStr, colStr;
-    std::cin >> rowStr >> colStr;
+    int row = -1, col = -1;
 
-    auto toIndex = [](const std::string& s) -> int {
-        if (s.size() == 1 && std::isalpha(s[0])) {
-            return std::toupper(s[0]) - 'A'; // A=0, B=1, etc.
-        }
-        return std::stoi(s); // sinon, interpréter comme chiffre
-    };
+    while (true) {
+        std::cout << "Entrez la ligne et la colonne (ex: B D ou 1 3) : ";
+        std::cin >> rowStr >> colStr;
 
-    int row = toIndex(rowStr);
-    int col = toIndex(colStr);
+        auto toIndex = [](const std::string& s) -> int {
+            if (s.size() == 1 && std::isalpha(s[0])) {
+                return std::toupper(s[0]) - 'A';  // A=0, B=1, etc.
+            }
+            try {
+                return std::stoi(s);
+            } catch (...) {
+                return -1;
+            }
+        };
+
+        row = toIndex(rowStr);
+        col = toIndex(colStr);
+
+        if (row >= 0 && col >= 0) break;
+
+        std::cout << "⛔ Mouvement invalide, réessaie.\n";
+    }
+
     return {row, col};
 }
 

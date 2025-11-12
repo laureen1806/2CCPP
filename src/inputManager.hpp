@@ -7,7 +7,7 @@
 class InputManager {
 public:
     std::string getCommand() const;
-    std::pair<int,int> getCoordinates() const;
+    std::pair<int, int> getCoordinates();
     char getRotationChoice() const;
 };
 
