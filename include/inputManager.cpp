@@ -4,7 +4,7 @@
 // Récupère une commande utilisateur
 std::string InputManager::getCommand() const {
     std::string cmd;
-    std::cout << "Entrez une commande (P=placer, R=rotation, F=flip, E=échange, D=afficher): ";
+    std::cout << "Entrez une commande: ";
     std::cin >> cmd;
     return cmd;
 }
