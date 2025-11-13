@@ -10,16 +10,17 @@ class Game;
 
 class BonusSquare {
 private:
-    BonusType type;
     int row, col;
+    BonusType type;
 
 public:
-    BonusSquare(BonusType type, int row, int col);
+    BonusSquare(int row, int col,BonusType type):  row(row), col(col), type(type){};
     void apply(Player& player, Game& game);
 
-    BonusType getType() const;
+    
     int getRow() const;
     int getCol() const;
+    BonusType getType() const;
 };
 
 #endif

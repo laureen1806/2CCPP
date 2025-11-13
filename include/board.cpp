@@ -25,7 +25,35 @@ bool Board::placeTile(Tile& tile, Player& player, int row, int col) {
             if (shape[i][j] == 0) continue;
             int r = row + i, c = col + j;
             grid[r][c].setGrass(player.getId());
-            // handle bonus trigger if cell had bonus before placement rules require
+            // Vérifie si un bonus est entouré sur les 4 côtés
+            for (int r = 1; r < size - 1; ++r) {
+                for (int c = 1; c < size - 1; ++c) {
+                    Cell& center = grid[r][c];
+                    if (!center.hasBonus()) continue;
+                
+                    bool surrounded =
+                        grid[r - 1][c].getPlayerId() == player.getId() &&
+                        grid[r + 1][c].getPlayerId() == player.getId() &&
+                        grid[r][c - 1].getPlayerId() == player.getId() &&
+                        grid[r][c + 1].getPlayerId() == player.getId();
+                
+                    if (surrounded) {
+                        BonusType bonus = center.getBonusType();
+                        center.clearBonus(); // le bonus est consommé
+                    
+                        if (bonus == BonusType::EXCHANGE) {
+                            player.addCoupon();
+                            std::cout << player.getName() << " gagne un coupon d’échange !\n";
+                        } else if (bonus == BonusType::STONE) {
+                            std::cout << player.getName() << " a débloqué un bonus Pierre !\n";
+                            player.addCoupon(); // récompense alternative si besoin
+                        } else if (bonus == BonusType::ROBBERY) {
+                            std::cout << player.getName() << " a débloqué un bonus Vol !\n";
+                            // Le jeu doit gérer cela au niveau Game
+                        }
+                    }
+                }
+            }
         }
     }
     return true;

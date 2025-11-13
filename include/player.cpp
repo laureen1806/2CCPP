@@ -15,8 +15,22 @@ void Player::useCoupon() {
     if (coupons > 0) coupons--;
 }
 
+void Player::addCoupon() {
+    coupons++;
+}
+
 void Player::placeTile(Tile& tile) {
     territory.push_back(tile);
+}
+
+Tile Player::removeLastTile() {
+    Tile last = territory.back();
+    territory.pop_back();
+    return last;
+}
+
+const std::vector<Tile>& Player::getTerritory() const {
+    return territory;
 }
 
 // Calcul du plus grand carré

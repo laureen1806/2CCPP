@@ -18,6 +18,10 @@ static std::string ansiColor(const std::string& name) {
 }
 static const char* RESET = "\x1b[0m";
 
+static const std::string BONUS_COLOR_EXCHANGE = "\x1b[93m"; // jaune vif
+static const std::string BONUS_COLOR_STONE    = "\x1b[90m"; // gris
+static const std::string BONUS_COLOR_ROBBERY  = "\x1b[91m"; // rouge clair
+
 static std::string colorByPlayerId(const std::vector<Player>& players, int pid) {
     auto it = std::find_if(players.begin(), players.end(),
                            [&](const Player& p){ return p.getId() == pid; });
@@ -38,7 +42,21 @@ void RendererCLI::displayBoard(const Board& board,
             if (cell.getTerrain() == Terrain::Stone) {
                 std::cout << "# ";
             } else if (cell.getTerrain() == Terrain::Bonus) {
-                std::cout << "* ";
+                // Affiche le type de bonus
+                switch (cell.getBonusType()) {
+                    case BonusType::EXCHANGE:
+                        std::cout << BONUS_COLOR_EXCHANGE << "E " << RESET;
+                        break;
+                    case BonusType::STONE:
+                        std::cout << BONUS_COLOR_STONE << "S " << RESET;
+                        break;
+                    case BonusType::ROBBERY:
+                        std::cout << BONUS_COLOR_ROBBERY << "R " << RESET;
+                        break;
+                    default:
+                        std::cout << "* ";
+                        break;
+                }
             }else if (cell.isGrass()) {
                 int pid = cell.getPlayerId();
                 std::string color = colorByPlayerId(players, pid); // ✅ correction
@@ -90,7 +108,20 @@ void RendererCLI::displayBoardWithPreview(const Board& board,
                 std::cout << "# ";
             }
             else if (cell.getTerrain() == Terrain::Bonus) {
-                std::cout << "* ";
+                switch (cell.getBonusType()) {
+                    case BonusType::EXCHANGE:
+                        std::cout << BONUS_COLOR_EXCHANGE << "E " << RESET;
+                        break;
+                    case BonusType::STONE:
+                        std::cout << BONUS_COLOR_STONE << "S " << RESET;
+                        break;
+                    case BonusType::ROBBERY:
+                        std::cout << BONUS_COLOR_ROBBERY << "R " << RESET;
+                        break;
+                    default:
+                        std::cout << "* ";
+                        break;
+                }
             }
             else if (cell.isGrass()) {
                 int pid = cell.getPlayerId();

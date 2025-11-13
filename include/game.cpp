@@ -49,10 +49,50 @@ Game::Game(int nbPlayers) : currentRound(0) {
     std::random_device rd;
     std::mt19937 gen(rd());
     std::shuffle(players.begin(), players.end(), gen);
-
+    distributeBonuses(nbPlayers);
     initializeTiles(nbPlayers);
 }
 
+void Game::robTile(Player& thief) {
+    if (players.size() < 2) {
+        std::cout << "Pas assez de joueurs pour voler.\n";
+        return;
+    }
+
+    std::cout << "Choisissez la victime parmi :\n";
+    for (auto& p : players) {
+        if (p.getId() != thief.getId())
+            std::cout << " - " << p.getId() << ": " << p.getName() << "\n";
+    }
+
+    int victimId;
+    std::cout << "Entrez l'ID du joueur à voler : ";
+    std::cin >> victimId;
+
+    Player* victim = nullptr;
+    for (auto& p : players) {
+        if (p.getId() == victimId) {
+            victim = &p;
+            break;
+        }
+    }
+
+    if (!victim) {
+        std::cout << "Joueur invalide.\n";
+        return;
+    }
+
+    if (victim->getTerritory().empty()) {
+        std::cout << victim->getName() << " n'a aucune tuile à voler.\n";
+        return;
+    }
+
+    Tile stolen = victim->getTerritory().back();
+    victim->removeLastTile();
+
+    thief.placeTile(stolen);
+    std::cout << thief.getName() << " a volé une tuile à " << victim->getName() << " !\n";
+}
 
 void Game::endGame() {
     std::cout << "\n=== Fin de partie ===\n";
@@ -265,4 +305,60 @@ bool Game::hasTiles() const {
     return !tileQueue.empty();
 }
 
+void Game::placeStone() {
+    InputManager input;
 
+    std::cout << "Choisissez une case vide pour placer une pierre : ";
+    auto [r, c] = input.getCoordinates();
+
+    int n = board->getSize();
+    if (r < 0 || r >= n || c < 0 || c >= n) {
+        std::cout << "Position invalide.\n";
+        return;
+    }
+    Cell& cell = board->at(r, c);
+    if (!cell.isEmpty()) {
+        std::cout << "Case déjà occupée.\n";
+        return;
+    }
+
+    cell.setStone();
+    std::cout << "Pierre placée en (" << r << ", " << c << ").\n";
+}
+
+void Game::distributeBonuses(int nbPlayers) {
+    int n = board->getSize();
+    int nbExchange = std::ceil(1.5 * nbPlayers);
+    int nbStone = std::ceil(0.5 * nbPlayers);
+    int nbRobbery = nbPlayers;
+
+    int total = nbExchange + nbStone + nbRobbery;
+
+    std::vector<BonusType> bonuses;
+    bonuses.insert(bonuses.end(), nbExchange, BonusType::EXCHANGE);
+    bonuses.insert(bonuses.end(), nbStone, BonusType::STONE);
+    bonuses.insert(bonuses.end(), nbRobbery, BonusType::ROBBERY);
+
+    std::shuffle(bonuses.begin(), bonuses.end(), std::mt19937{std::random_device{}()});
+
+    auto isValidPos = [&](int r, int c) {
+        if (r <= 0 || c <= 0 || r >= n - 1 || c >= n - 1) return false;
+        for (int dr = -1; dr <= 1; ++dr)
+            for (int dc = -1; dc <= 1; ++dc)
+                if (board->at(r + dr, c + dc).hasBonus())
+                    return false;
+        return board->at(r, c).isEmpty();
+    };
+
+    int placed = 0;
+    while (placed < total) {
+        int r = rand() % n;
+        int c = rand() % n;
+        if (!isValidPos(r, c)) continue;
+        BonusType type = bonuses[placed];
+        board->addBonus(BonusSquare(r, c, type));
+        placed++;
+    }
+
+    std::cout << "[DEBUG] " << placed << " bonus placés sur le plateau.\n";
+}

@@ -24,10 +24,12 @@ private:
 public:
     // Constructeur
     Player(const std::string& name, const std::string& color, int id);
-
+    Tile removeLastTile();
+    
     // Gestion des tuiles
     void placeTile(Tile& tile);
     void useCoupon();
+    void addCoupon();
 
     // Gestion de la base de départ
     void setBase(int row, int col) {
@@ -52,6 +54,7 @@ public:
     std::string getColor() const;
     int getCoupons() const;
     int getId() const;
+    const std::vector<Tile>& getTerritory() const; 
 };
 
 #endif

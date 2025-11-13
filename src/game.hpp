@@ -43,6 +43,10 @@ public:
     // Accesseurs utiles
     Board& getBoard() { return *board; }
     const std::vector<Player>& getPlayers() const { return players; }
+
+    void placeStone();
+    void robTile(Player& thief);
+    void distributeBonuses(int nbPlayers);
 };
 
 #endif

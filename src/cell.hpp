@@ -14,7 +14,7 @@ class Cell {
 private:
     Terrain terrain;
     int playerId;
-    BonusType bonus;
+    BonusType bonus = BonusType::NONE;
     char symbol;
 
 public:
@@ -24,7 +24,6 @@ public:
     bool isGrass() const;
     void setGrass(int pid);
     void setStone();
-    void setBonus(BonusType type);
 
     int getPlayerId() const;
     Terrain getTerrain() const;
@@ -32,6 +31,11 @@ public:
 
     char getSymbol() const;
     void setSymbol(char s);
+
+    bool hasBonus() const { return bonus != BonusType::NONE; }
+    BonusType getBonusType() const { return bonus; }
+    void setBonus(BonusType t) { bonus = t; terrain = Terrain::Bonus; }
+    void clearBonus() { bonus = BonusType::NONE; }
 };
 
 
