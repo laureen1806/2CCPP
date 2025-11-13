@@ -184,7 +184,7 @@ void Game::playTurn(Player& player) {
         std::cout << "\nTuile actuelle à placer :\n";
         currentTile.print(); 
 
-        renderer.displayBoardWithPreview(*board, players, currentTile, previewRow, previewCol);
+        renderer.displayBoardWithPreview(*board, players, currentTile, previewRow, previewCol, player);
 
         std::cout << "\nCommandes disponibles :\n";
         std::cout << "M row col : Déplacer la tuile\n";

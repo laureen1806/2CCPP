@@ -16,7 +16,8 @@ public:
     void displayBoardWithPreview(const Board& board,
                              const std::vector<Player>& players,
                              const Tile& tile,
-                             int row, int col) const;
+                             int row, int col,
+                             const Player& currentPlayer) const;
 
     void displayTile(const Tile& tile) const;
 };

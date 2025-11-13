@@ -42,6 +42,7 @@ bool Tile::canPlace(const Board& board, int row, int col, const Player& player) 
     auto shape = getShape();
 
     bool touchesTerritory = false;
+    auto [baseRow, baseCol] = player.getBase();
 
     for (int r = 0; r < (int)shape.size(); ++r) {
         for (int c = 0; c < (int)shape[r].size(); ++c) {
@@ -58,12 +59,10 @@ bool Tile::canPlace(const Board& board, int row, int col, const Player& player) 
             // Interdiction de recouvrir une case déjà occupée
             if (!cell.isEmpty()) return false;
 
-            // Interdiction de recouvrir la base du joueur
-            auto [baseRow, baseCol] = player.getBase();
+            // Interdiction de recouvrir la base
             if (rr == baseRow && cc == baseCol) return false;
 
             // Vérifier la connexion au territoire du joueur
-            // On regarde les 4 voisins
             const int dr[4] = {-1, 1, 0, 0};
             const int dc[4] = {0, 0, -1, 1};
             for (int k = 0; k < 4; ++k) {
@@ -71,7 +70,10 @@ bool Tile::canPlace(const Board& board, int row, int col, const Player& player) 
                 int nc = cc + dc[k];
                 if (nr >= 0 && nr < n && nc >= 0 && nc < n) {
                     const Cell& neighbor = board.at(nr, nc);
-                    if (neighbor.isGrass() && neighbor.getPlayerId() == player.getId()) {
+
+                    // ✅ Considérer la base comme territoire
+                    if ((nr == baseRow && nc == baseCol) ||
+                        (neighbor.isGrass() && neighbor.getPlayerId() == player.getId())) {
                         touchesTerritory = true;
                     }
                 }
@@ -79,7 +81,6 @@ bool Tile::canPlace(const Board& board, int row, int col, const Player& player) 
         }
     }
 
-    // Il faut au moins une connexion
     return touchesTerritory;
 }
 

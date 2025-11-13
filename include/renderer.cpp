@@ -2,6 +2,7 @@
 #include "../src/rendererCLI.hpp"
 #include <iostream>
 #include <vector>
+#include <algorithm>
 
 static std::string ansiColor(const std::string& name) {
     if (name == "Red")     return "\x1b[31m";
@@ -17,6 +18,11 @@ static std::string ansiColor(const std::string& name) {
 }
 static const char* RESET = "\x1b[0m";
 
+static std::string colorByPlayerId(const std::vector<Player>& players, int pid) {
+    auto it = std::find_if(players.begin(), players.end(),
+                           [&](const Player& p){ return p.getId() == pid; });
+    return (it != players.end()) ? ansiColor(it->getColor()) : "";
+}
 
 void RendererCLI::displayBoard(const Board& board,
                                const std::vector<Player>& players) const {
@@ -33,11 +39,9 @@ void RendererCLI::displayBoard(const Board& board,
                 std::cout << "# ";
             } else if (cell.getTerrain() == Terrain::Bonus) {
                 std::cout << "* ";
-            } else if (cell.isGrass()) {
+            }else if (cell.isGrass()) {
                 int pid = cell.getPlayerId();
-                std::string color = (pid >= 0 && pid < (int)players.size())
-                    ? ansiColor(players[pid].getColor())
-                    : "";
+                std::string color = colorByPlayerId(players, pid); // ✅ correction
                 std::cout << color << "■ " << RESET;
             } else {
                 std::cout << ". ";
@@ -51,7 +55,8 @@ void RendererCLI::displayBoard(const Board& board,
 void RendererCLI::displayBoardWithPreview(const Board& board,
                                           const std::vector<Player>& players,
                                           const Tile& tile,
-                                          int row, int col) const
+                                          int row, int col,
+                                          const Player& currentPlayer) const
 {
     const int n = board.getSize();
 
@@ -77,8 +82,8 @@ void RendererCLI::displayBoardWithPreview(const Board& board,
             }
 
             if (isPreview) {
-                // Tuile fantôme → couleur du joueur actif mais atténuée
-                std::string color = ansiColor(players[0].getColor()); // ou joueur courant
+                // ✅ Utiliser la couleur du joueur courant
+                std::string color = ansiColor(currentPlayer.getColor());
                 std::cout << color << "? " << RESET;
             }
             else if (cell.getTerrain() == Terrain::Stone) {
@@ -89,9 +94,7 @@ void RendererCLI::displayBoardWithPreview(const Board& board,
             }
             else if (cell.isGrass()) {
                 int pid = cell.getPlayerId();
-                std::string color = (pid >= 0 && pid < (int)players.size())
-                    ? ansiColor(players[pid].getColor())
-                    : "";
+                std::string color = colorByPlayerId(players, pid); // ✅ correction
                 std::cout << color << "■ " << RESET;
             }
             else {
@@ -101,7 +104,6 @@ void RendererCLI::displayBoardWithPreview(const Board& board,
         std::cout << "\n";
     }
 }
-
 
 void RendererCLI::displayTile(const Tile& tile) const {
     const auto& shape = tile.getShape();

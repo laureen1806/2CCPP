@@ -19,6 +19,7 @@ private:
     // 👇 Ajoute ces deux attributs pour mémoriser la base
     int baseRow = -1;
     int baseCol = -1;
+    bool placedAnyTile;
 
 public:
     // Constructeur
