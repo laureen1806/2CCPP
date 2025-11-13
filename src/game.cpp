@@ -1,5 +1,5 @@
 #include "../includes/game.hpp"
-#include "../includes/src/board.hpp"
+#include "../includes/board.hpp"
 #include "../includes/tileFactory.hpp"
 #include "../includes/rendererCLI.hpp"
 #include "../includes/inputManager.hpp"

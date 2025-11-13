@@ -1,5 +1,5 @@
 #include "../includes/board.hpp"
-#include "../includesplayer.hpp"
+#include "../includes/player.hpp"
 #include <iostream>
 
 // Constructeur
