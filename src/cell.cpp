@@ -1,4 +1,4 @@
-#include "cell.hpp"
+#include "../includes/cell.hpp"
 
 Cell::Cell() : terrain(Terrain::Empty), playerId(-1), bonus(BonusType::NONE), symbol('.') {}
 

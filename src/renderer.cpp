@@ -1,5 +1,5 @@
 // renderer.cpp
-#include "../src/rendererCLI.hpp"
+#include "../includes/rendererCLI.hpp"
 #include <iostream>
 #include <vector>
 #include <algorithm>
@@ -125,7 +125,7 @@ void RendererCLI::displayBoardWithPreview(const Board& board,
             }
             else if (cell.isGrass()) {
                 int pid = cell.getPlayerId();
-                std::string color = colorByPlayerId(players, pid); // ✅ correction
+                std::string color = colorByPlayerId(players, pid); 
                 std::cout << color << "■ " << RESET;
             }
             else {

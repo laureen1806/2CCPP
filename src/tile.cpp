@@ -1,7 +1,7 @@
-#include "../src/tile.hpp"
-#include "../src/board.hpp"
-#include "../src/cell.hpp"
-#include "../src/player.hpp"
+#include "../includes/tile.hpp"
+#include "../includes/board.hpp"
+#include "../includes/cell.hpp"
+#include "../includes/player.hpp"
 #include <algorithm>
 #include <iostream>
 

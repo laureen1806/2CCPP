@@ -1,4 +1,4 @@
-#include "../src/inputManager.hpp"
+#include "../includes/inputManager.hpp"
 #include <iostream>
 
 // Récupère une commande utilisateur

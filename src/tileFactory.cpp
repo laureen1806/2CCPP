@@ -1,5 +1,5 @@
-#include "../src/tileFactory.hpp"
-#include "../src/tile.hpp"
+#include "../includes/tileFactory.hpp"
+#include "../includes/tile.hpp"
 #include <vector>
 
 static std::vector<Tile> allTiles = {

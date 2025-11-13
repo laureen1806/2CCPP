@@ -1,6 +1,6 @@
-#include "../src/player.hpp"
-#include "../src/board.hpp"
-#include "../src/cell.hpp"
+#include "../includes/player.hpp"
+#include "../includes/board.hpp"
+#include "../includes/cell.hpp"
 #include <algorithm> // pour std::min
 
 Player::Player(const std::string& name, const std::string& color, int id)

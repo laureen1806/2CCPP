@@ -1,4 +1,4 @@
-#include "../src/bonusSquare.hpp"
+#include "../includes/bonusSquare.hpp"
 
 BonusType BonusSquare::getType() const {
     return type;
